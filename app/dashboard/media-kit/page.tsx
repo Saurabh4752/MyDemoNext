@@ -1,15 +1,13 @@
 "use client";
 import Image from "next/image";
-import profile from '../../../Assets/Profile.jpg';
-import instagram from '../../../Assets/instagram.png';
-import youtube from '../../../Assets/youtube.png';
-import twitter from '../../../Assets/twitterIcon.png';
-import {
-  Pencil,
-  Eye,
-  Download,
-  Plus,
-} from "lucide-react";
+import AddSection from "./AddSection";
+import instagram from "../../../Assets/instagram.png";
+import youtube from "../../../Assets/youtube.png";
+import twitter from "../../../Assets/twitterIcon.png";
+import { Pencil, Eye, Download, Plus } from "lucide-react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../../store/store";
 
 const socialStats = [
   {
@@ -51,13 +49,15 @@ const collaborations = [
 ];
 
 export default function MediaKitPage() {
+  const [isOpen, setIsOpen] = useState(false);
+  const mediaKit = useSelector((state: RootState) => state.mediaKit);
+  console.log(mediaKit);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white">
-            Media Kit
-          </h1>
+          <h1 className="text-3xl font-bold text-white">Media Kit</h1>
 
           <p className="mt-1 text-zinc-400">
             Showcase your creator profile and brand collaborations.
@@ -88,46 +88,51 @@ export default function MediaKitPage() {
         <div className="relative px-6 pb-6">
           <div className="-mt-14 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-              <Image src ={profile} alt="Profile" className="h-28 w-28 rounded-2xl border-4 border-zinc-900 bg-zinc-700" />
+              <Image
+                src={mediaKit?.sections[0].data?.photo}
+                alt="Profile"
+                className="h-28 w-28 rounded-2xl border-4 border-zinc-900 bg-zinc-700"
+              />
 
               <div>
                 <h2 className="text-3xl font-bold text-white">
-                  Saurabh Meshram
+                  {mediaKit?.sections[0].data?.name}
                 </h2>
 
-                <p className="mt-1 text-zinc-400">
-                  Tech Content Creator • UI/UX • Developer Lifestyle
-                </p>
-
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-zinc-300">
-                    Technology
-                  </span>
-
-                  <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-zinc-300">
-                    Productivity
-                  </span>
-
-                  <span className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-zinc-300">
-                    Developer Content
-                  </span>
+                  {mediaKit?.sections[0].data?.bio.map((ite, i) => (
+                    <p key={i} className="mt-1 text-zinc-400 ">
+                      {ite}
+                    </p>
+                  ))}
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {mediaKit?.sections[0].data?.fields.map((ite, i) => (
+                    <p
+                      key={i}
+                      className="rounded-full bg-zinc-800 px-3 py-1 text-sm text-zinc-300"
+                    >
+                      {ite}
+                    </p>
+                  ))}
                 </div>
               </div>
             </div>
 
-            <button className="flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200">
+            <button
+              className="flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-zinc-200"
+              onClick={() => setIsOpen(true)}
+            >
               <Plus size={18} />
               Add Section
             </button>
           </div>
         </div>
       </div>
-
+      {isOpen && <AddSection setIsOpen={setIsOpen} />}
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-white">
-            About Creator
-          </h2>
+          <h2 className="text-xl font-semibold text-white">About Creator</h2>
 
           <button className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
             <Pencil size={16} />
@@ -135,18 +140,13 @@ export default function MediaKitPage() {
         </div>
 
         <p className="leading-7 text-zinc-300">
-          I create engaging technology and developer-focused content
-          helping brands connect with modern digital audiences.
-          My content focuses on productivity, web development,
-          creator tools, and tech lifestyle storytelling.
+          {mediaKit?.sections[0].data?.about}
         </p>
       </div>
 
       <div>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white">
-            Social Analytics
-          </h2>
+          <h2 className="text-2xl font-bold text-white">Social Analytics</h2>
 
           <button className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-white transition hover:bg-zinc-800">
             Manage Platforms
@@ -161,7 +161,12 @@ export default function MediaKitPage() {
             >
               <div className="flex items-center justify-between">
                 <div className="rounded-xl bg-zinc-800 p-3">
-                  <Image src={item.icon} alt={item.platform} width={24} height={24} />
+                  <Image
+                    src={item.icon}
+                    alt={item.platform}
+                    width={24}
+                    height={24}
+                  />
                 </div>
 
                 <button className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
@@ -175,9 +180,7 @@ export default function MediaKitPage() {
 
               <div className="mt-4 flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-400">
-                    Followers
-                  </p>
+                  <p className="text-sm text-zinc-400">Followers</p>
 
                   <p className="text-2xl font-bold text-white">
                     {item.followers}
@@ -185,9 +188,7 @@ export default function MediaKitPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm text-zinc-400">
-                    Engagement
-                  </p>
+                  <p className="text-sm text-zinc-400">Engagement</p>
 
                   <p className="text-xl font-semibold text-green-400">
                     {item.engagement}
@@ -233,9 +234,7 @@ export default function MediaKitPage() {
                     {item.brand}
                   </h3>
 
-                  <p className="text-zinc-400">
-                    {item.campaign}
-                  </p>
+                  <p className="text-zinc-400">{item.campaign}</p>
                 </div>
               </div>
 
@@ -269,22 +268,16 @@ export default function MediaKitPage() {
                 key={item.country}
                 className="flex items-center justify-between"
               >
-                <span className="text-zinc-300">
-                  {item.country}
-                </span>
+                <span className="text-zinc-300">{item.country}</span>
 
-                <span className="font-medium text-white">
-                  {item.percent}
-                </span>
+                <span className="font-medium text-white">{item.percent}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
-          <h3 className="text-lg font-semibold text-white">
-            Audience Age
-          </h3>
+          <h3 className="text-lg font-semibold text-white">Audience Age</h3>
 
           <div className="mt-5 space-y-4">
             {[
@@ -292,17 +285,10 @@ export default function MediaKitPage() {
               { age: "25-34", percent: "44%" },
               { age: "35-44", percent: "18%" },
             ].map((item) => (
-              <div
-                key={item.age}
-                className="flex items-center justify-between"
-              >
-                <span className="text-zinc-300">
-                  {item.age}
-                </span>
+              <div key={item.age} className="flex items-center justify-between">
+                <span className="text-zinc-300">{item.age}</span>
 
-                <span className="font-medium text-white">
-                  {item.percent}
-                </span>
+                <span className="font-medium text-white">{item.percent}</span>
               </div>
             ))}
           </div>
@@ -315,31 +301,40 @@ export default function MediaKitPage() {
 
           <div className="mt-5 space-y-4 text-zinc-300">
             <div>
-              <p className="text-sm text-zinc-500">
-                Email
-              </p>
+              <p className="text-sm text-zinc-500">Email</p>
 
               <p>saurabh@email.com</p>
             </div>
 
             <div>
-              <p className="text-sm text-zinc-500">
-                Website
-              </p>
+              <p className="text-sm text-zinc-500">Website</p>
 
               <p>www.creatorportfolio.com</p>
             </div>
 
             <div>
-              <p className="text-sm text-zinc-500">
-                Management
-              </p>
+              <p className="text-sm text-zinc-500">Management</p>
 
               <p>Creator Talent Agency</p>
             </div>
           </div>
         </div>
       </div>
+      {mediaKit?.sections.length >= 9 &&
+        mediaKit?.sections.slice(9).map((el, i) => {
+          return (
+            <div
+              key={i}
+              className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 flex gap-8"
+            >
+              {el.data.map((item, ind) => (
+                <h3 key={ind} className="text-lg font-semibold text-white">
+                  {item}
+                </h3>
+              ))}
+            </div>
+          );
+        })}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { configureStore,combineReducers } from '@reduxjs/toolkit'
-import collaborationReducer from './features/collaborationSlice'
+import collaborationReducer from './features/collaborationSlice';
+import mediaKitReducer from './features/mediaKitSlice'
 import {
   persistStore,
   persistReducer,
@@ -8,11 +9,13 @@ import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
   collaboration: collaborationReducer,
+  mediaKit:mediaKitReducer
 });
 
 const persistConfig = {
   key: "root",
   storage,
+  version: 3
 };
 
 const persistedReducer = persistReducer(

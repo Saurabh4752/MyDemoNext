@@ -32,7 +32,7 @@ function getStatusStyles(status: string) {
 export default function CollaborationsPage() {
   const collaborations = useSelector((state: RootState) => state.collaboration);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  console.log(collaborations);
+  // console.log(collaborations);
   const addCollaboration = () => {
     setIsOpen(true);
   };

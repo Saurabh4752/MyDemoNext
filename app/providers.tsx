@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
 import { store, persistor } from "../store/store";
+persistor.purge();
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
