@@ -135,5 +135,4 @@ const AddSection = ({ setIsOpen }) => {
     </div>
   );
 };
-
 export default AddSection;

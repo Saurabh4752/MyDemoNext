@@ -1,57 +1,33 @@
 "use client";
 import Image from "next/image";
 import AddSection from "./AddSection";
-import instagram from "../../../Assets/instagram.png";
-import youtube from "../../../Assets/youtube.png";
-import twitter from "../../../Assets/twitterIcon.png";
 import { Pencil, Eye, Download, Plus } from "lucide-react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../store/store";
-
-const socialStats = [
-  {
-    platform: "Instagram",
-    followers: "245K",
-    engagement: "8.4%",
-    icon: instagram,
-  },
-  {
-    platform: "YouTube",
-    followers: "120K",
-    engagement: "6.1%",
-    icon: youtube,
-  },
-  {
-    platform: "Twitter",
-    followers: "80K",
-    engagement: "5.2%",
-    icon: twitter,
-  },
-];
-
-const collaborations = [
-  {
-    brand: "Nike",
-    campaign: "Summer Collection Campaign",
-    reach: "1.2M Reach",
-  },
-  {
-    brand: "Samsung",
-    campaign: "Galaxy Creator Partnership",
-    reach: "890K Reach",
-  },
-  {
-    brand: "Spotify",
-    campaign: "Music Lifestyle Campaign",
-    reach: "540K Reach",
-  },
-];
+import { EditSection, SocialAnalytics, CampaignEditor } from "./EditSection";
+import { tr } from "zod/v4/locales";
+import CampaignPage from "./CampaignPage";
 
 export default function MediaKitPage() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [socialEdit, setSocialEdit] = useState(false);
+  const [socialEditItem, setSocialEditItem] = useState(null);
+  const [compaignEdit, setCompaignEdit] = useState(false);
+  const [compaignEditItem, setCompaignEditItem] = useState(null);
   const mediaKit = useSelector((state: RootState) => state.mediaKit);
-  console.log(mediaKit);
+  // console.log(mediaKit);
+
+  const openSocialEdit = (item) => {
+    setSocialEdit(true);
+    setSocialEditItem(item);
+  };
+
+  const openCampaignEditor = (item) => {
+    setCompaignEdit(true);
+    setCompaignEditItem(item);
+  };
 
   return (
     <div className="space-y-6">
@@ -134,7 +110,10 @@ export default function MediaKitPage() {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-white">About Creator</h2>
 
-          <button className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
+          <button
+            className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
+            onClick={() => setEditOpen(true)}
+          >
             <Pencil size={16} />
           </button>
         </div>
@@ -143,7 +122,15 @@ export default function MediaKitPage() {
           {mediaKit?.sections[0].data?.about}
         </p>
       </div>
-
+      {editOpen && (
+        <EditSection setEditOpen={setEditOpen} data={mediaKit?.sections[0]} />
+      )}
+      {compaignEdit && (
+        <CampaignEditor
+          item={compaignEditItem}
+          setCompaignEdit={setCompaignEdit}
+        />
+      )}
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Social Analytics</h2>
@@ -154,7 +141,7 @@ export default function MediaKitPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {socialStats.map((item) => (
+          {mediaKit?.sections[1].data.map((item, ind) => (
             <div
               key={item.platform}
               className="rounded-2xl border border-zinc-800 bg-zinc-900 p-5"
@@ -169,7 +156,10 @@ export default function MediaKitPage() {
                   />
                 </div>
 
-                <button className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
+                <button
+                  className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
+                  onClick={() => openSocialEdit(item)}
+                >
                   <Pencil size={16} />
                 </button>
               </div>
@@ -199,7 +189,9 @@ export default function MediaKitPage() {
           ))}
         </div>
       </div>
-
+      {socialEdit && (
+        <SocialAnalytics item={socialEditItem} setSocialEdit={setSocialEdit} />
+      )}
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
         <div className="mb-5 flex items-center justify-between">
           <div>
@@ -212,44 +204,19 @@ export default function MediaKitPage() {
             </p>
           </div>
 
-          <button className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500">
+          <button
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-500"
+            onClick={() => openCampaignEditor(null)}
+          >
             <Plus size={18} />
             Add Campaign
           </button>
         </div>
 
-        <div className="space-y-4">
-          {collaborations.map((item) => (
-            <div
-              key={item.brand}
-              className="flex flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-5 lg:flex-row lg:items-center lg:justify-between"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-zinc-800 text-lg font-bold text-white">
-                  {item.brand[0]}
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-white">
-                    {item.brand}
-                  </h3>
-
-                  <p className="text-zinc-400">{item.campaign}</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className="rounded-full bg-green-500/10 px-4 py-2 text-sm font-medium text-green-400">
-                  {item.reach}
-                </span>
-
-                <button className="rounded-lg border border-zinc-700 p-2 text-zinc-400 transition hover:bg-zinc-800 hover:text-white">
-                  <Pencil size={16} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <CampaignPage
+          setCompaignEdit={setCompaignEdit}
+          setCompaignEditItem={setCompaignEditItem}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -259,11 +226,7 @@ export default function MediaKitPage() {
           </h3>
 
           <div className="mt-5 space-y-4">
-            {[
-              { country: "India", percent: "48%" },
-              { country: "United States", percent: "22%" },
-              { country: "United Kingdom", percent: "12%" },
-            ].map((item) => (
+            {mediaKit?.sections[2].data?.countries.map((item) => (
               <div
                 key={item.country}
                 className="flex items-center justify-between"
@@ -280,11 +243,7 @@ export default function MediaKitPage() {
           <h3 className="text-lg font-semibold text-white">Audience Age</h3>
 
           <div className="mt-5 space-y-4">
-            {[
-              { age: "18-24", percent: "38%" },
-              { age: "25-34", percent: "44%" },
-              { age: "35-44", percent: "18%" },
-            ].map((item) => (
+            {mediaKit?.sections[2].data?.ageGroups.map((item) => (
               <div key={item.age} className="flex items-center justify-between">
                 <span className="text-zinc-300">{item.age}</span>
 

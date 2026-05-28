@@ -31,7 +31,7 @@ function getStatusStyles(status: string) {
 
 export default function CollaborationsPage() {
   const collaborations = useSelector((state: RootState) => state.collaboration);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   // console.log(collaborations);
   const addCollaboration = () => {
     setIsOpen(true);
@@ -59,7 +59,7 @@ export default function CollaborationsPage() {
           <Plus size={18} />
           New Collaboration
         </button>
-        {isOpen && <AddCollaborations isOpen={isOpen} setIsOpen={setIsOpen} />}
+        {isOpen && <AddCollaborations setIsOpen={setIsOpen} />}
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">

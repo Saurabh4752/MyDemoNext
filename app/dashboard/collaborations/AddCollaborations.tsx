@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addToColab } from "../../../store/features/collaborationSlice";
 
-const AddCollaborations = ({ setIsOpen }) => {
+type ModalProps = {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const AddCollaborations = ({ setIsOpen }: ModalProps) => {
   const [formData, setFormData] = useState({
     brand: "",
     campaign: "",
@@ -20,7 +23,9 @@ const AddCollaborations = ({ setIsOpen }) => {
     });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
 
     setFormData((prev) => ({
@@ -30,7 +35,7 @@ const AddCollaborations = ({ setIsOpen }) => {
     }));
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(addToColab(formData));
     console.log(formData);

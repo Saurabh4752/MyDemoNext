@@ -9,47 +9,100 @@ export const mediaKitSlice = createSlice({
   name: 'mediaKit',
   initialState,
    reducers: {
-    updateField: (state, action) => {
-      const { section, field, value } = action.payload;
+    editSection: (state, action) => {
+      const { sectionId, newData } = action.payload;
 
-      state[section][field] = value;
+      const section = state.sections.find(
+        (item) => item.id === sectionId
+      );
+  
+      if (section) {
+        section.data.about = newData;
+      }
     },
 
-    updateNestedField: (state, action) => {
-      const { path, value } = action.payload;
-      console.log(path, value)
+      editSocialSection: (state, action) => {
+      const {  formData, item} = action.payload;
 
-      let current = state;
+      let section = state?.sections[1].data.find(
+        (ele) => ele.id === item.id
+      );
 
-      for (let i = 0; i < path.length - 1; i++) {
-        current = current[path[i]];
+      let ind = state.sections[1].data.findIndex(e=>e == section)
+
+      if (section) {
+        state.sections[1].data[ind] = formData
       }
+     
+    },
 
-      current[path[path.length - 1]] = value;
+     editCampainSection: (state, action) => {
+      const {  formData, item} = action.payload;
+
+      let section = state?.sections[3].data.find(
+        (ele) => ele.id === item.id
+      );
+
+      let ind = state.sections[3].data.findIndex(e=>e == section)
+
+      if (section) {
+        state.sections[3].data[ind] = formData
+      }
+    },
+
+    addCampainSection: (state, action) => {
+      const {  formData} = action.payload;
+      state.sections[3].data.push(formData)
+    },
+  
+     updateInitialState: (state, action) => {
+      // const {data} = action.payload;
+      state.sections[3].data = action.payload;
     },
 
     addItem: (state, action) => {
-    //   const { section, item } = action.payload;
-
-    //   state[section].push(item);
-    state.sections.push(action.payload)
+     state.sections.push(action.payload)
     },
 
-    removeItem: (state, action) => {
-      const { section, id } = action.payload;
+    // removeItem: (state, action) => {
+    //   const { section, id } = action.payload;
 
-      state[section] = state[section].filter(
-        item => item.id !== id
-      );
-    },
+    //   state[section] = state[section].filter(
+    //     item => item.id !== id
+    //   );
+    // },
+
+     // updateField: (state, action) => {
+    //   const { section, field, value } = action.payload;
+
+    //   state[section][field] = value;
+    // },
+
+    // updateNestedField: (state, action) => {
+    //   const { path, value } = action.payload;
+    //   console.log(path, value)
+
+    //   let current = state;
+
+    //   for (let i = 0; i < path.length - 1; i++) {
+    //     current = current[path[i]];
+    //   }
+
+    //   current[path[path.length - 1]] = value;
+    // },
   },
 });
 
 export const {
-  updateField,
-  updateNestedField,
+  // updateField,
+  // updateNestedField,
+  editSection,
   addItem,
-  removeItem,
+  // removeItem,
+  editSocialSection,
+  editCampainSection,
+  addCampainSection,
+  updateInitialState
 } = mediaKitSlice.actions;
 
 export default mediaKitSlice.reducer
